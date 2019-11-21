@@ -1,0 +1,22 @@
+// lambda = 20, sequence length 50kb, effect pop size Ne=1e4, human/ape mutation rate 1.2e-8/2.5e-8, generation time 25/20yrs
+// after scaling, burn-in = 1e5/20=5e3 gen
+// Simulate the tree for human, chimp (5MYA), and bonobo (1MYA), total of 8MYA
+
+initialize() {
+    initializeMutationRate(5e-7); //  2.5e-8 scaled by 20
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeGenomicElementType("g1", m1, 1.0);
+    initializeGenomicElement(g1, 0, 50000); 
+    initializeRecombinationRate(2e-7); // 1e-8 scaled by 20
+}
+1 {
+    defineConstant("simID",getSeed()); // get seed to mark the case
+    sim.addSubpop("p1", 500); // 1e4 scaled by 20
+}
+
+// end of burn-in, chimp split off, output stage 1
+5000 late(){ 
+    sim.addSubpopSplit("p2",500,p1);
+    // output everything
+    sim.outputFull("/gpfs/scratch/xzc5154/slimTemp/slim_splitMut_L20_stage1_" + simID + ".txt");
+}

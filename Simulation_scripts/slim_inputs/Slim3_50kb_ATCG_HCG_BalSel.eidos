@@ -1,0 +1,96 @@
+// simulate sequences with actual nucleotides
+
+initialize() {
+    defineConstant("L", 50000);
+    initializeSLiMOptions(nucleotideBased=T);
+    initializeAncestralNucleotides( randomNucleotides(L) );
+    initializeMutationTypeNuc("m1", 0.5, "f", 0.0);
+    initializeMutationTypeNuc("m2", var_h, "f", var_s);
+    // initializeMutationRate(2.5e-6);
+    initializeGenomicElementType("g1", m1, 1.0, mmJukesCantor(8.3e-7)); //  (2.5/3~=0.83)e-8 scaled by 100
+    initializeGenomicElement(g1, 0, L-1);
+    initializeRecombinationRate(1e-6); // 1e-8 scaled by 100
+}
+1 {
+    defineConstant("simID2",getSeed()); // get seed in case of re-run
+    sim.addSubpop("p1", 100); // 1e4 scaled by 100
+}
+
+// end of burn-in, 8mya gorilla split off
+4500 late(){ 
+    sim.addSubpopSplit("p2",100,p1);
+}
+
+
+// 5mya chimpanzees split off
+6000 late(){
+    sim.addSubpopSplit("p3",100,p1) ;
+}
+
+1000:8500 late(){
+    if ( sim.generation == var_age ){
+        cat( '// Introduce the selected mutation at '+ var_age + ' gen.\n\n');
+        // save the state of the simulation
+        sim.outputFull("/gpfs/scratch/xzc5154/slimTemp/slimH_L20_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+        target = sample(p1.genomes, 1);
+        Nuc = target.nucleotides(start=25000,end=25000);
+        cat('// The nucleotide at the center is'+Nuc+'\n');
+        aNuc=c();
+        for(n in c("A","T","C","G")){
+            if(n != Nuc){
+                aNuc = c(aNuc,n);
+            }
+        }
+        target.addNewDrawnMutation(m2,25000,nucleotide=aNuc);
+        cat('// After introducing mutation: ' + target.nucleotides(start=25000,end=25000)+'.\n');
+    }
+
+    if (sim.generation > var_age){
+        if (sim.countOfMutationsOfType(m2) == 0 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slimH_L20_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+            // start a newly seeded run by incrementing the previous seed
+            setSeed(getSeed() + 1);
+            cat("Mutation lost. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            Nuc = target.nucleotides(start=25000,end=25000);
+            cat('// the nucleotide at the center is '+Nuc+'.\n');
+            aNuc=c();
+            for(n in c("A","T","C","G")){
+                if(n != Nuc){
+                    aNuc = c(aNuc,n);
+                }
+            }
+            target.addNewDrawnMutation(m2,25000,nucleotide=aNuc);
+            cat('// After introducing mutation:' + target.nucleotides(start=25000,end=25000)+'.\n');
+        }
+        if ( sim.mutationFrequencies(p1, sim.mutationsOfType(m2)) == 1 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slimH_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+            // start a newly seeded run by incrementing the previous seed 
+            setSeed(getSeed() + 1);
+            cat("Mutation fixed. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            Nuc = target.nucleotides(start=25000,end=25000);
+            cat('// the nucleotide at the center is '+Nuc+'.\n');
+            aNuc=c();
+            for(n in c("A","T","C","G")){
+                if(n != Nuc){
+                    aNuc = c(aNuc,n);
+                }
+            }
+            target.addNewDrawnMutation(m2,25000,nucleotide=aNuc);
+            cat('// After introducing mutation: ' + target.nucleotides(start=25000,end=25000)+'.\n');
+        }
+    }
+    
+}
+
+// sample
+8500 late() {
+    sam = p1.sampleIndividuals(25).genomes ; // human
+    sam = c(sam, p3.sampleIndividuals(25).genomes ) ; // chimp
+    sam = c(sam, p2.sampleIndividuals(1).genomes ) ; // gorilla
+    cat(asString('\n// output population samples\n'));
+    sam.outputVCF(simplifyNucleotides=F);
+}

@@ -1,0 +1,214 @@
+// lambda==20, assume 20yr/gen, chimp split 2e5 gen ago-->10kgen ago
+
+initialize() { 
+	initializeMutationRate(2.5e-7);
+	initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeMutationType("m2", var_h , "f", var_s*20);
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, 50000);
+        rec=runif(1, 1e-7,3e-7);
+        initializeRecombinationRate(rec);
+}
+
+1 { 
+	defineConstant("simID",getSeed()); // get seed in case of re-run
+	sim.addSubpop("p1", 500); 
+}
+
+5000 {
+    sim.addSubpopSplit("p2",500,p1);
+}
+
+5000:17500 late() {
+    if ( sim.generation == var_age ){
+        cat( '// Introduce the selected mutation at '+ var_age + ' gen.\n\n');
+        // save the state of the simulation
+        sim.outputFull("/gpfs/scratch/xzc5154/slimTemp/ceuSel_temp" + simID + ".txt");
+        target = sample(p1.genomes, 1);
+        target.addNewDrawnMutation(m2,25000);
+    }
+	else if (sim.generation > var_age){
+        if (sim.countOfMutationsOfType(m2) == 0 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/ceuSel_temp" + simID + ".txt");
+            // start a newly seeded run by incrementing the previous seed
+            setSeed(getSeed() + 1);
+            cat("Mutation lost. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+        if ( sim.mutationFrequencies(p1, sim.mutationsOfType(m2)) == 1 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/ceuSel_temp" + simID + ".txt");
+            // start a newly seeded run by incrementing the previous seed 
+            setSeed(getSeed() + 1);
+            cat("Mutation fixed. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+    }        
+}
+
+12501{ p1.setSubpopulationSize(498); }
+12698{ p1.setSubpopulationSize(499); }
+12888{ p1.setSubpopulationSize(504); }
+13070{ p1.setSubpopulationSize(511); }
+13245{ p1.setSubpopulationSize(521); }
+13413{ p1.setSubpopulationSize(533); }
+13574{ p1.setSubpopulationSize(548); }
+13729{ p1.setSubpopulationSize(564); }
+13878{ p1.setSubpopulationSize(582); }
+14021{ p1.setSubpopulationSize(601); }
+14158{ p1.setSubpopulationSize(620); }
+14290{ p1.setSubpopulationSize(641); }
+14417{ p1.setSubpopulationSize(661); }
+14539{ p1.setSubpopulationSize(681); }
+14656{ p1.setSubpopulationSize(700); }
+14768{ p1.setSubpopulationSize(717); }
+14876{ p1.setSubpopulationSize(732); }
+14980{ p1.setSubpopulationSize(744); }
+15079{ p1.setSubpopulationSize(753); }
+15175{ p1.setSubpopulationSize(759); }
+15267{ p1.setSubpopulationSize(762); }
+15355{ p1.setSubpopulationSize(763); }
+15439{ p1.setSubpopulationSize(762); }
+15521{ p1.setSubpopulationSize(759); }
+15599{ p1.setSubpopulationSize(756); }
+15674{ p1.setSubpopulationSize(752); }
+15746{ p1.setSubpopulationSize(747); }
+15815{ p1.setSubpopulationSize(743); }
+15882{ p1.setSubpopulationSize(740); }
+15946{ p1.setSubpopulationSize(737); }
+16007{ p1.setSubpopulationSize(736); }
+16066{ p1.setSubpopulationSize(737); }
+16123{ p1.setSubpopulationSize(740); }
+16177{ p1.setSubpopulationSize(745); }
+16230{ p1.setSubpopulationSize(753); }
+16280{ p1.setSubpopulationSize(765); }
+16328{ p1.setSubpopulationSize(779); }
+16374{ p1.setSubpopulationSize(795); }
+16419{ p1.setSubpopulationSize(813); }
+16461{ p1.setSubpopulationSize(833); }
+16502{ p1.setSubpopulationSize(855); }
+16542{ p1.setSubpopulationSize(878); }
+16580{ p1.setSubpopulationSize(901); }
+16616{ p1.setSubpopulationSize(925); }
+16651{ p1.setSubpopulationSize(948); }
+16684{ p1.setSubpopulationSize(971); }
+16717{ p1.setSubpopulationSize(992); }
+16748{ p1.setSubpopulationSize(1012); }
+16777{ p1.setSubpopulationSize(1028); }
+16806{ p1.setSubpopulationSize(1041); }
+16833{ p1.setSubpopulationSize(1051); }
+16860{ p1.setSubpopulationSize(1056); }
+16885{ p1.setSubpopulationSize(1056); }
+16909{ p1.setSubpopulationSize(1052); }
+16933{ p1.setSubpopulationSize(1044); }
+16955{ p1.setSubpopulationSize(1031); }
+16977{ p1.setSubpopulationSize(1015); }
+16997{ p1.setSubpopulationSize(995); }
+17017{ p1.setSubpopulationSize(971); }
+17036{ p1.setSubpopulationSize(944); }
+17055{ p1.setSubpopulationSize(915); }
+17072{ p1.setSubpopulationSize(883); }
+17089{ p1.setSubpopulationSize(850); }
+17105{ p1.setSubpopulationSize(814); }
+17121{ p1.setSubpopulationSize(777); }
+17136{ p1.setSubpopulationSize(740); }
+17150{ p1.setSubpopulationSize(702); }
+17164{ p1.setSubpopulationSize(663); }
+17177{ p1.setSubpopulationSize(625); }
+17190{ p1.setSubpopulationSize(587); }
+17102{ p1.setSubpopulationSize(550); }
+17114{ p1.setSubpopulationSize(515); }
+17225{ p1.setSubpopulationSize(481); }
+17236{ p1.setSubpopulationSize(449); }
+17247{ p1.setSubpopulationSize(419); }
+17257{ p1.setSubpopulationSize(390); }
+17266{ p1.setSubpopulationSize(364); }
+17276{ p1.setSubpopulationSize(339); }
+17285{ p1.setSubpopulationSize(317); }
+17293{ p1.setSubpopulationSize(296); }
+17301{ p1.setSubpopulationSize(277); }
+17309{ p1.setSubpopulationSize(259); }
+17317{ p1.setSubpopulationSize(244); }
+17324{ p1.setSubpopulationSize(230); }
+17331{ p1.setSubpopulationSize(217); }
+17338{ p1.setSubpopulationSize(206); }
+17344{ p1.setSubpopulationSize(196); }
+17350{ p1.setSubpopulationSize(187); }
+17356{ p1.setSubpopulationSize(180); }
+17362{ p1.setSubpopulationSize(173); }
+17367{ p1.setSubpopulationSize(167); }
+17373{ p1.setSubpopulationSize(163); }
+17378{ p1.setSubpopulationSize(159); }
+17382{ p1.setSubpopulationSize(156); }
+17387{ p1.setSubpopulationSize(154); }
+17392{ p1.setSubpopulationSize(153); }
+17396{ p1.setSubpopulationSize(153); }
+17400{ p1.setSubpopulationSize(154); }
+17404{ p1.setSubpopulationSize(156); }
+17408{ p1.setSubpopulationSize(159); }
+17411{ p1.setSubpopulationSize(163); }
+17415{ p1.setSubpopulationSize(169); }
+17418{ p1.setSubpopulationSize(176); }
+17422{ p1.setSubpopulationSize(184); }
+17425{ p1.setSubpopulationSize(193); }
+17428{ p1.setSubpopulationSize(204); }
+17431{ p1.setSubpopulationSize(216); }
+17433{ p1.setSubpopulationSize(230); }
+17436{ p1.setSubpopulationSize(246); }
+17439{ p1.setSubpopulationSize(263); }
+17441{ p1.setSubpopulationSize(281); }
+17443{ p1.setSubpopulationSize(302); }
+17446{ p1.setSubpopulationSize(324); }
+17448{ p1.setSubpopulationSize(347); }
+17450{ p1.setSubpopulationSize(373); }
+17452{ p1.setSubpopulationSize(399); }
+17454{ p1.setSubpopulationSize(427); }
+17456{ p1.setSubpopulationSize(456); }
+17457{ p1.setSubpopulationSize(486); }
+17459{ p1.setSubpopulationSize(516); }
+17461{ p1.setSubpopulationSize(548); }
+17462{ p1.setSubpopulationSize(581); }
+17464{ p1.setSubpopulationSize(615); }
+17465{ p1.setSubpopulationSize(650); }
+17467{ p1.setSubpopulationSize(686); }
+17468{ p1.setSubpopulationSize(724); }
+17469{ p1.setSubpopulationSize(763); }
+17471{ p1.setSubpopulationSize(804); }
+17472{ p1.setSubpopulationSize(848); }
+17473{ p1.setSubpopulationSize(893); }
+17474{ p1.setSubpopulationSize(941); }
+17475{ p1.setSubpopulationSize(991); }
+17476{ p1.setSubpopulationSize(1045); }
+17477{ p1.setSubpopulationSize(1103); }
+17478{ p1.setSubpopulationSize(1164); }
+17479{ p1.setSubpopulationSize(1230); }
+17480{ p1.setSubpopulationSize(1372); }
+17481{ p1.setSubpopulationSize(1449); }
+17482{ p1.setSubpopulationSize(1529); }
+17483{ p1.setSubpopulationSize(1613); }
+17483{ p1.setSubpopulationSize(1699); }
+17484{ p1.setSubpopulationSize(1788); }
+17485{ p1.setSubpopulationSize(1970); }
+17486{ p1.setSubpopulationSize(2063); }
+17487{ p1.setSubpopulationSize(2245); }
+17488{ p1.setSubpopulationSize(2418); }
+17489{ p1.setSubpopulationSize(2572); }
+17490{ p1.setSubpopulationSize(2770); }
+17491{ p1.setSubpopulationSize(2885); }
+17492{ p1.setSubpopulationSize(3048); }
+17493{ p1.setSubpopulationSize(3286); }
+17494{ p1.setSubpopulationSize(3524); }
+17495{ p1.setSubpopulationSize(4114); }
+17496{ p1.setSubpopulationSize(5096); }
+17497{ p1.setSubpopulationSize(6324); }
+17498{ p1.setSubpopulationSize(7364); }
+17499{ p1.setSubpopulationSize(7487); }
+
+
+17500 late() {
+        p1.outputMSSample(50);
+        p2.outputMSSample(1); 
+}

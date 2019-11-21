@@ -1,0 +1,32 @@
+// Neutral simulation of human-chimp-gorilla demography. lambda=100
+
+initialize() {
+    initializeMutationRate(1.25e-5); //  2.5e-8 scaled by 100, 5 times larger
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    // initializeMutationType("m2", 0.5, "f", 0.0);
+    initializeGenomicElementType("g1", m1, 1.0);
+    initializeGenomicElement(g1, 0, 50000);
+    initializeRecombinationRate(1e-6); // 1e-8 scaled by 100
+}
+1 {
+    sim.addSubpop("p1", 100); // 1e4 scaled by 100
+}
+
+// end of burn-in, gorilla split off
+4500 late(){ 
+    sim.addSubpopSplit("p2",100,p1);
+}
+
+6000 late(){ // chimp split off
+    sim.addSubpopSplit("p3",100,p1);
+}
+
+//6001 {
+//    sim.chromosome.setMutationRate(2e-5,50000,"*");
+//}
+
+8500 late() {
+    p1.outputMSSample(50); // human
+    p3.outputMSSample(50); // chimp
+    p2.outputMSSample(1);
+}

@@ -1,0 +1,218 @@
+// lambda = 20, sequence length 50kb, effect pop size Ne=1e4, mutation rate 1.2e-8, generation time 25yrs
+// after scaling, every million yrs --> 1e6/25/20=2000 gen ; 5mya -> 10kgen; burn-in in the first stage= 1e5/20=5000 gen
+// Simulate the tree for human, chimp (5MYA), and bonobo (1MYA)
+// SMC++ demography covers 5000 generations
+// simID given through command line
+
+initialize() {
+    initializeMutationRate(2.4e-7); //  1.2e-8 scaled by 20
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeMutationType("m2", var_h , "f", var_s);
+    initializeGenomicElementType("g1", m1, 1.0);
+    initializeGenomicElement(g1, 0, 50000); 
+    initializeRecombinationRate(2e-7); // 1e-8 scaled by 20
+}
+5000 late() {
+    cat('simID: '+simID+'\n');
+    sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slim_splitMut_L20_stage1_" + simID + ".txt");
+    defineConstant("simID2",getSeed()); // get seed in case of re-run    
+}
+
+10001{ p1.setSubpopulationSize(498); }
+10198{ p1.setSubpopulationSize(499); }
+10388{ p1.setSubpopulationSize(504); }
+10570{ p1.setSubpopulationSize(511); }
+10745{ p1.setSubpopulationSize(521); }
+10913{ p1.setSubpopulationSize(533); }
+11074{ p1.setSubpopulationSize(548); }
+11229{ p1.setSubpopulationSize(564); }
+11378{ p1.setSubpopulationSize(582); }
+11521{ p1.setSubpopulationSize(601); }
+11658{ p1.setSubpopulationSize(620); }
+11790{ p1.setSubpopulationSize(641); }
+11917{ p1.setSubpopulationSize(661); }
+12039{ p1.setSubpopulationSize(681); }
+12156{ p1.setSubpopulationSize(700); }
+12268{ p1.setSubpopulationSize(717); }
+12376{ p1.setSubpopulationSize(732); }
+12480{ p1.setSubpopulationSize(744); }
+12579{ p1.setSubpopulationSize(753); }
+12675{ p1.setSubpopulationSize(759); }
+12767{ p1.setSubpopulationSize(762); }
+12855{ p1.setSubpopulationSize(763); }
+12939{ p1.setSubpopulationSize(762); }
+13021{ p1.setSubpopulationSize(759); }
+13099{ p1.setSubpopulationSize(756); }
+13174{ p1.setSubpopulationSize(752); }
+13246{ p1.setSubpopulationSize(747); }
+13315{ p1.setSubpopulationSize(743); }
+13382{ p1.setSubpopulationSize(740); }
+13446{ p1.setSubpopulationSize(737); }
+13507{ p1.setSubpopulationSize(736); }
+13566{ p1.setSubpopulationSize(737); }
+13623{ p1.setSubpopulationSize(740); }
+13677{ p1.setSubpopulationSize(745); }
+13730{ p1.setSubpopulationSize(753); }
+13780{ p1.setSubpopulationSize(765); }
+13828{ p1.setSubpopulationSize(779); }
+13874{ p1.setSubpopulationSize(795); }
+13919{ p1.setSubpopulationSize(813); }
+13961{ p1.setSubpopulationSize(833); }
+14002{ p1.setSubpopulationSize(855); }
+14042{ p1.setSubpopulationSize(878); }
+14080{ p1.setSubpopulationSize(901); }
+14116{ p1.setSubpopulationSize(925); }
+14151{ p1.setSubpopulationSize(948); }
+14184{ p1.setSubpopulationSize(971); }
+14217{ p1.setSubpopulationSize(992); }
+14248{ p1.setSubpopulationSize(1012); }
+14277{ p1.setSubpopulationSize(1028); }
+14306{ p1.setSubpopulationSize(1041); }
+14333{ p1.setSubpopulationSize(1051); }
+14360{ p1.setSubpopulationSize(1056); }
+14385{ p1.setSubpopulationSize(1056); }
+14409{ p1.setSubpopulationSize(1052); }
+14433{ p1.setSubpopulationSize(1044); }
+14455{ p1.setSubpopulationSize(1031); }
+14477{ p1.setSubpopulationSize(1015); }
+14497{ p1.setSubpopulationSize(995); }
+14517{ p1.setSubpopulationSize(971); }
+14536{ p1.setSubpopulationSize(944); }
+14555{ p1.setSubpopulationSize(915); }
+14572{ p1.setSubpopulationSize(883); }
+14589{ p1.setSubpopulationSize(850); }
+14605{ p1.setSubpopulationSize(814); }
+14621{ p1.setSubpopulationSize(777); }
+14636{ p1.setSubpopulationSize(740); }
+14650{ p1.setSubpopulationSize(702); }
+14664{ p1.setSubpopulationSize(663); }
+14677{ p1.setSubpopulationSize(625); }
+14690{ p1.setSubpopulationSize(587); }
+14702{ p1.setSubpopulationSize(550); }
+14714{ p1.setSubpopulationSize(515); }
+14725{ p1.setSubpopulationSize(481); }
+14736{ p1.setSubpopulationSize(449); }
+14747{ p1.setSubpopulationSize(419); }
+14757{ p1.setSubpopulationSize(390); }
+14766{ p1.setSubpopulationSize(364); }
+14776{ p1.setSubpopulationSize(339); }
+14785{ p1.setSubpopulationSize(317); }
+14793{ p1.setSubpopulationSize(296); }
+14801{ p1.setSubpopulationSize(277); }
+14809{ p1.setSubpopulationSize(259); }
+14817{ p1.setSubpopulationSize(244); }
+14824{ p1.setSubpopulationSize(230); }
+14831{ p1.setSubpopulationSize(217); }
+14838{ p1.setSubpopulationSize(206); }
+14844{ p1.setSubpopulationSize(196); }
+14850{ p1.setSubpopulationSize(187); }
+14856{ p1.setSubpopulationSize(180); }
+14862{ p1.setSubpopulationSize(173); }
+14867{ p1.setSubpopulationSize(167); }
+14873{ p1.setSubpopulationSize(163); }
+14878{ p1.setSubpopulationSize(159); }
+14882{ p1.setSubpopulationSize(156); }
+14887{ p1.setSubpopulationSize(154); }
+14892{ p1.setSubpopulationSize(153); }
+14896{ p1.setSubpopulationSize(153); }
+14900{ p1.setSubpopulationSize(154); }
+14904{ p1.setSubpopulationSize(156); }
+14908{ p1.setSubpopulationSize(159); }
+14911{ p1.setSubpopulationSize(163); }
+14915{ p1.setSubpopulationSize(169); }
+14918{ p1.setSubpopulationSize(176); }
+14922{ p1.setSubpopulationSize(184); }
+14925{ p1.setSubpopulationSize(193); }
+14928{ p1.setSubpopulationSize(204); }
+14931{ p1.setSubpopulationSize(216); }
+14933{ p1.setSubpopulationSize(230); }
+14936{ p1.setSubpopulationSize(246); }
+14939{ p1.setSubpopulationSize(263); }
+14941{ p1.setSubpopulationSize(281); }
+14943{ p1.setSubpopulationSize(302); }
+14946{ p1.setSubpopulationSize(324); }
+14948{ p1.setSubpopulationSize(347); }
+14950{ p1.setSubpopulationSize(373); }
+14952{ p1.setSubpopulationSize(399); }
+14954{ p1.setSubpopulationSize(427); }
+14956{ p1.setSubpopulationSize(456); }
+14957{ p1.setSubpopulationSize(486); }
+14959{ p1.setSubpopulationSize(516); }
+14961{ p1.setSubpopulationSize(548); }
+14962{ p1.setSubpopulationSize(581); }
+14964{ p1.setSubpopulationSize(615); }
+14965{ p1.setSubpopulationSize(650); }
+14967{ p1.setSubpopulationSize(686); }
+14968{ p1.setSubpopulationSize(724); }
+14969{ p1.setSubpopulationSize(763); }
+14971{ p1.setSubpopulationSize(804); }
+14972{ p1.setSubpopulationSize(848); }
+14973{ p1.setSubpopulationSize(893); }
+14974{ p1.setSubpopulationSize(941); }
+14975{ p1.setSubpopulationSize(991); }
+14976{ p1.setSubpopulationSize(1045); }
+14977{ p1.setSubpopulationSize(1103); }
+14978{ p1.setSubpopulationSize(1164); }
+14979{ p1.setSubpopulationSize(1230); }
+14980{ p1.setSubpopulationSize(1372); }
+14981{ p1.setSubpopulationSize(1449); }
+14982{ p1.setSubpopulationSize(1529); }
+14983{ p1.setSubpopulationSize(1613); }
+14983{ p1.setSubpopulationSize(1699); }
+14984{ p1.setSubpopulationSize(1788); }
+14985{ p1.setSubpopulationSize(1970); }
+14986{ p1.setSubpopulationSize(2063); }
+14987{ p1.setSubpopulationSize(2245); }
+14988{ p1.setSubpopulationSize(2418); }
+14989{ p1.setSubpopulationSize(2572); }
+14990{ p1.setSubpopulationSize(2770); }
+14991{ p1.setSubpopulationSize(2885); }
+14992{ p1.setSubpopulationSize(3048); }
+14993{ p1.setSubpopulationSize(3286); }
+14994{ p1.setSubpopulationSize(3524); }
+14995{ p1.setSubpopulationSize(4114); }
+14996{ p1.setSubpopulationSize(5096); }
+14997{ p1.setSubpopulationSize(6324); }
+14998{ p1.setSubpopulationSize(7364); }
+14999{ p1.setSubpopulationSize(7487); }
+
+
+5000:15000 late(){
+    if ( sim.generation == var_age ){
+        cat( '// Introduce the selected mutation at '+ var_age + ' gen.\n\n');
+        // save the state of the simulation
+        sim.outputFull("/gpfs/scratch/xzc5154/slimTemp/slimH_L20_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+        target = sample(p1.genomes, 1);
+        target.addNewDrawnMutation(m2,25000);
+    }
+
+    if (sim.generation > var_age){
+        if (sim.countOfMutationsOfType(m2) == 0 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slimH_L20_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+            // start a newly seeded run by incrementing the previous seed
+            setSeed(getSeed() + 1);
+            cat("Mutation lost. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+        if ( sim.mutationFrequencies(p1, sim.mutationsOfType(m2)) == 1 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slimH_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+            // start a newly seeded run by incrementing the previous seed 
+            setSeed(getSeed() + 1);
+            cat("Mutation fixed. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+    }
+    
+}
+
+
+// 4+1MYA later, sample human (p1)
+15000 late(){ 
+    // asString(sum(sim.substitutions.mutationType == m2)) + \n 
+    cat('// output population samples\n');
+    p1.outputMSSample(50); // human
+}

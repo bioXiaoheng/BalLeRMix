@@ -1,0 +1,56 @@
+// lambda = 100, sequence length 50kb, effect pop size Ne=1e4, mutation rate 1.2e-8, generation time 20yrs
+// after scaling, every million yrs --> 1e6/20/100=500 gen ; burn-in = 1e5/100=1e3 gen
+// Simulate the tree for human, chimp (5MYA), and bonobo (1MYA)
+// simID given through command line
+
+initialize() {
+    initializeMutationRate(1.2e-6); //  1.2e-8 scaled by 100
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeMutationType("m2", var_h , "f", var_s);
+    initializeGenomicElementType("g1", m1, 1.0);
+    initializeGenomicElement(g1, 0, 50000); 
+    initializeRecombinationRate(1e-6); // 1e-8 scaled by 100
+}
+2500 late() {
+    cat('simID: '+simID+'\n');
+    sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slim_splitMut_stage1_" + simID + ".txt");
+    defineConstant("simID2",getSeed()); // get seed in case of re-run
+}
+
+2500:5000 late(){
+    if ( sim.generation == var_age ){
+        cat( '// Introduce the selected mutation at '+ var_age + ' gen.\n\n');
+        // save the state of the simulation
+        sim.outputFull("/gpfs/scratch/xzc5154/slimTemp/slimH_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+        target = sample(p1.genomes, 1);
+        target.addNewDrawnMutation(m2,25000);
+    }
+
+    if (sim.generation > var_age){
+        if (sim.countOfMutationsOfType(m2) == 0 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slimH_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+            // start a newly seeded run by incrementing the previous seed
+            setSeed(getSeed() + 1);
+            cat("Mutation lost. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+        if ( sim.mutationFrequencies(p1, sim.mutationsOfType(m2)) == 1 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slimH_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID2 + ".txt");
+            // start a newly seeded run by incrementing the previous seed 
+            setSeed(getSeed() + 1);
+            cat("Mutation fixed. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+    }
+    
+}
+// 4+1MYA later, sample human (p1)
+5000 late(){ 
+    // asString(sum(sim.substitutions.mutationType == m2)) + \n 
+    cat('// output population samples\n');
+    p1.outputMSSample(50); // human
+}

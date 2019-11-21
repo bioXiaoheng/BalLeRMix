@@ -1,0 +1,83 @@
+// Original N0=1831.5. Scale by N0=1831.5, lambda=20; totalGeneration=15000:
+// mu=2.499946e-08, r=2.841024e-09
+// After scaling:
+initialize() { 
+	initializeMutationRate(5e-07);
+	initializeRecombinationRate(5.68e-08);
+	initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeMutationType("m2", var_h , "f", var_s*20);
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, 50000);
+}
+
+1 { 
+	defineConstant("simID",getSeed()); // get seed in case of re-run
+	sim.addSubpop("p1", 500); 
+}
+
+5000 { // end of burn-in, human split off
+	sim.addSubpopSplit("p2",500,p1);
+}
+
+5000:17500 late() {
+    if (sim.generation == var_age){
+        cat( '// Introduce the selected mutation at'+var_age+'gen ago.\n\n');
+        // save the state of the simulation
+        sim.outputFull("/gpfs/scratch/xzc5154/slimTemp/psmcSel_temp" + simID + ".txt");
+        target = sample(p1.genomes, 1);
+        target.addNewDrawnMutation(m2,25000);
+    }
+    else if (sim.generation > var_age){
+        if (sim.countOfMutationsOfType(m2) == 0 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/psmcSel_temp" + simID + ".txt");
+            // start a newly seeded run by incrementing the previous seed
+            setSeed(getSeed() + 1);
+            cat("Mutation lost. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+        if ( sim.mutationFrequencies(p1, sim.mutationsOfType(m2)) == 1 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/psmcSel_temp" + simID + ".txt");
+            // start a newly seeded run by incrementing the previous seed 
+            setSeed(getSeed() + 1);
+            cat("Mutation fixed. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+    }   
+}
+
+13918 { p1.setSubpopulationSize(2360);}
+14942 { p1.setSubpopulationSize(1794);}
+15339 { p1.setSubpopulationSize(1558);}
+15675 { p1.setSubpopulationSize(1205);}
+15959 { p1.setSubpopulationSize(910);}
+16200 { p1.setSubpopulationSize(728);}
+16404 { p1.setSubpopulationSize(640);}
+16577 { p1.setSubpopulationSize(591);}
+16723 { p1.setSubpopulationSize(522);}
+16847 { p1.setSubpopulationSize(418);}
+16951 { p1.setSubpopulationSize(309);}
+17040 { p1.setSubpopulationSize(222);}
+17115 { p1.setSubpopulationSize(166);}
+17178 { p1.setSubpopulationSize(141);}
+17232 { p1.setSubpopulationSize(150);}
+17277 { p1.setSubpopulationSize(209);}
+17316 { p1.setSubpopulationSize(368);}
+17349 { p1.setSubpopulationSize(695);}
+17376 { p1.setSubpopulationSize(1096);}
+17400 { p1.setSubpopulationSize(1186);}
+17419 { p1.setSubpopulationSize(875);}
+17436 { p1.setSubpopulationSize(575);}
+17450 { p1.setSubpopulationSize(441);}
+17462 { p1.setSubpopulationSize(386);}
+17472 { p1.setSubpopulationSize(308);}
+17481 { p1.setSubpopulationSize(232);}
+17488 { p1.setSubpopulationSize(178);}
+
+17500 late() {
+        p1.outputMSSample(50);
+        p2.outputMSSample(1); 
+}

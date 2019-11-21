@@ -1,0 +1,81 @@
+// neutral script for a rigged rec map
+initialize() {
+    initializeMutationRate(2.5e-6); //  2.5e-8 scaled by 100
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeMutationType("m2", 0.5, "f", 0.0);
+    initializeGenomicElementType("g1", m1, 1.0);
+    initializeGenomicElement(g1, 0, 50000);
+    ends=NULL;
+    rates=NULL;
+    for( i in c(1:50)){
+        rate = 1e-7 * 100^(i%2);
+        end = i*1000;
+        ends = c(ends,end);
+        rates = c(rates, rate);
+    }
+    // the original rate: 1e-8 scaled by 100
+    cat("// End: "+ends+" Rate: "+asString(rates)+"\n");
+    initializeRecombinationRate(rates, ends);
+}
+1 {
+    defineConstant("simID",getSeed()); // get seed in case of re-run
+    sim.addSubpop("p1", 100); // 1e4 scaled by 100
+}
+
+// end of burn-in, gorilla split off
+4500 late(){ 
+    sim.addSubpopSplit("p2",100,p1);
+}
+
+6000 late(){ // chimp split off
+    sim.addSubpopSplit("p3",100,p1);
+}
+
+1000:8500 late(){ // track allele
+    if ( sim.generation == var_age ){
+        cat( '// Introduce the selected mutation at '+ var_age + ' gen.\n\n');
+        // save the state of the simulation
+        sim.outputFull("/gpfs/scratch/xzc5154/slimTemp/slim_10rec_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID + ".txt");
+        target = sample(p1.genomes, 1);
+        target.addNewDrawnMutation(m2,25000);
+    }
+
+    if (sim.generation > var_age){
+        if (sim.countOfMutationsOfType(m2) == 0 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slim_10rec_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID + ".txt");
+            // start a newly seeded run by incrementing the previous seed
+            setSeed(getSeed() + 1);
+            cat("Mutation lost. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+        if ( sim.mutationFrequencies(p1, sim.mutationsOfType(m2)) == 1 ){
+            sim.outputMutations(sim.mutationsOfType(m2));
+            sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slim_10rec_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID + ".txt");
+            // start a newly seeded run by incrementing the previous seed 
+            setSeed(getSeed() + 1);
+            cat("Mutation fixed. Restarting simulation with seed "+ getSeed() +"\n");
+            target = sample(p1.genomes, 1);
+            target.addNewDrawnMutation(m2,25000);
+        }
+    }
+}
+
+
+//6001 {
+//    sim.chromosome.setMutationRate(2e-5,50000,"*");
+//}
+
+8500 late() {
+    // remove the temp file
+    deleteFile("/gpfs/scratch/xzc5154/slimTemp/slim_h" + var_h + "_s"+ var_s + "_gen"+ var_age +"_temp" + simID + ".txt") ;
+    cat('\n// output mutation counts\n');
+    sim.outputMutations( sim.mutationsOfType(m2) );
+    fixed = ( sum(sim.substitutions.mutationType == m2) == 1 );
+    cat(ifelse(fixed, 'Fixed.\n', 'Not fixed.\n'));
+    cat(asString(sum(sim.substitutions.mutationType == m2)) + '\n// output population samples\n');
+    p1.outputMSSample(50); // human
+    p3.outputMSSample(50); // chimp
+    p2.outputMSSample(1);
+}

@@ -1,0 +1,29 @@
+// lambda = 20, sequence length 50kb, effect pop size Ne=1e4, mutation rate 2.5e-8, generation time 20yrs
+// after scaling, every million yrs --> 1e6/20/20=2500 gen ; burn-in = 1e5/20=5e3 gen
+// Simulate the tree for human, chimp (5MYA), and bonobo (1MYA)
+// simID given through command line
+
+initialize() {
+    initializeMutationRate(5e-7); //  2.5e-8 scaled by 20
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeGenomicElementType("g1", m1, 1.0);
+    initializeGenomicElement(g1, 0, 50000); 
+    initializeRecombinationRate(2e-7); // 1e-8 scaled by 20
+}
+5000 late(){
+    sim.readFromPopulationFile("/gpfs/scratch/xzc5154/slimTemp/slim_splitMut_L20_stage1_" + simID + ".txt");
+}
+
+// 4MYA later, bonobo diverge (p3)
+
+15000 late(){
+    cat('Add subpopulation p3.\n');
+    sim.addSubpopSplit("p3",100,p2);
+}
+
+// 4+1MYA later, sample bonobos and chimp
+17500 late(){
+    cat('// output population samples\n');
+    p3.outputMSSample(50); // bonobo-2
+    p2.outputMSSample(1); // chimp
+}
