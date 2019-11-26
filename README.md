@@ -4,4 +4,4 @@ This repository hosts the software package for BalLeRMix and scripts used in the
 
 - For the software, go to `BalLeRMix/software/`
 - For scripts used for SLiM simulations, go to `BalLeRMix/Simulation_scripts/`
-- For scripts used in empirical analyses,  go to `BalLeRMix/empirical_analysis/`
+- For scripts used in empirical analyses,  go to `BalLeRMix/Empirical_analysis/`
