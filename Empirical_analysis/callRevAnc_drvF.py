@@ -1,4 +1,4 @@
-#Jan 30, 2018: Modified for parsing bonobo data. Use panPan2 as ancestral call.
+#Jan 30, 2018: Modified for parsing bonobo data. Use hg38 as ancestral and panPan2 as derived
 #May 24, 2018: Modified s.t. compatible with other population sizes
 #May 9, 2018: Modified script to make sure to output derived freq
 #go through alignment, vcf, and HWE pvalues at the same time and generate derived frequency
