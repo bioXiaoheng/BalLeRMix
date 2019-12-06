@@ -7,6 +7,7 @@ This repository hosts the software package for BalLeRMix and scripts used in the
 - For scripts used in empirical analyses,  go to `BalLeRMix/Empirical_analysis/`
 
 Please cite the following manuscript if using this software:
+
 X Cheng, M DeGiorgio (2019) Robust and window-insensitive mixture model approaches for localizing balancing selection. *bioRxiv* doi.org/10.1101/645887
 
 Complete user manual for BalLeRMix v2 is coming soon...
