@@ -8,6 +8,6 @@ This repository hosts the software package for BalLeRMix and scripts used in the
 
 Please cite the following manuscript if using this software:
 
-X Cheng, M DeGiorgio (2019) Robust and window-insensitive mixture model approaches for localizing balancing selection. *bioRxiv* doi.org/10.1101/645887
+X Cheng, M DeGiorgio (2019) Flexible mixture model approaches that accommodate footprint size variability for robust detection of for localizing balancing selection. *bioRxiv* doi.org/10.1101/645887
 
 Complete user manual for BalLeRMix v2 is coming soon...
