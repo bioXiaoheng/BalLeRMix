@@ -18,7 +18,7 @@ Complete user manual for BalLeRMix v2 is coming soon...
 
 ------
 
-### Quick Guide 
+## Quick Guide 
 
 ```
 usage: BalLeRMix.py [-h] -i INFILE --spect SPECTFILE [-o OUTFILE] [-m M]
@@ -29,31 +29,29 @@ usage: BalLeRMix.py [-h] -i INFILE --spect SPECTFILE [-o OUTFILE] [-m M]
 ```
 You can use `python BalLeRMix.py -h` to see the more detailed help page.
 
-#### 1. Input format
-For B<sub>0</sub> and B<sub>2</sub> statistics, the user should first generate the _tab-delimited_ site frequency spectrum file, *without header*,e.g.:
+### 1. Input format
+For B<sub>0</sub> and B<sub>2</sub> statistics, the user should first generate the __*tab-delimited*__ site frequency spectrum file, __*without header*__, *e.g.*:
 > \<k\>|\<sample size n\>|\<proportion in the genome\>    
 > :-----:|:-----:|-----
 > 1|50|0.03572
 > 2|50|0.02024
-> 3|50|0.01350
 > ...
   
-or the configuration file with polymorphism/substitution ratio, *without header*:
+or the configuration file with polymorphism/substitution ratio, __*without header*__, *e.g.*:
 
 > \<sample size n\> | \<\% of substitutions\> | \<\% of polymorphisms\>  
 > :-----:|:-----:|:-----:   
 > 50  |  0.7346  |  0.2654    
 
-The input files should have four columns, presenting physical positions, genetic positions, number of derived (or minor) alleles observed, and total number of alleles observed (*i.e.* sample size). This file should be tab-delimited and should have a header:
+The input files should have four columns, presenting physical positions, genetic positions, number of derived (or minor) alleles observed, and total number of alleles observed (*i.e.* sample size). This file should be tab-delimited and should have a header, *e.g.*:
 
 > physPos|genPos|x|n    
 > :-----:|:-----:|:-----:|:-----:    
 > 16|0.000016|50|50    
-> 35|0.000035|12|50    
-> 101|0.000101|35|50    
+> 35|0.000035|12|50   
 > ...
   
-#### 2. Running the *B* statistics
+### 2. Running the *B* statistics
 To perform B<sub>2</sub> scans on your input data, use
 
   `python BalLeRMix.py -i <input> --spect <derived allele frequency spectrum> -o <output>`
@@ -74,7 +72,7 @@ To perform B<sub>0,MAF</sub> scans on your input data, use
 
   `python BalLeRMix.py -i <input> --config <minor allele frequency spectrum> -o <output> --nosub --MAF`
 
-#### 3. Generate helper files
+### 3. Generate helper files
 To generate spectrum file for B<sub>2</sub>:
 
     `python BalLeRMix.py -i <concatenated input> --getSpect --spect <spectrum file name>`
