@@ -54,51 +54,51 @@ The input files should have four columns, presenting physical positions, genetic
 ### 2. Running the *B* statistics
 To perform B<sub>2</sub> scans on your input data, use
 
-  `python BalLeRMix.py -i <input> --spect <derived allele frequency spectrum> -o <output>`
+    python BalLeRMix.py -i <input> --spect <derived allele frequency spectrum> -o <output>
 
 To perform B<sub>2,MAF</sub> scans on your input data, use
 
-  `python BalLeRMix.py -i <input> --spect <minor allele frequency spectrum> -o <output> --MAF`
+    python BalLeRMix.py -i <input> --spect <minor allele frequency spectrum> -o <output> --MAF
 
 To perform B<sub>1</sub> scans on your input data, use
 
-  `python BalLeRMix.py -i <input> --config <sub/poly configuration file> -o <output> --nofreq`
+    python BalLeRMix.py -i <input> --config <sub/poly configuration file> -o <output> --nofreq`
 
 To perform B<sub>0</sub> scans on your input data, use
 
-  `python BalLeRMix.py -i <input> --config <derived allele frequency spectrum> -o <output> --nosub `
+    python BalLeRMix.py -i <input> --config <derived allele frequency spectrum> -o <output> --nosub `
 
 To perform B<sub>0,MAF</sub> scans on your input data, use
 
-  `python BalLeRMix.py -i <input> --config <minor allele frequency spectrum> -o <output> --nosub --MAF`
+    python BalLeRMix.py -i <input> --config <minor allele frequency spectrum> -o <output> --nosub --MAF`
 
 ### 3. Generate helper files
 To generate spectrum file for B<sub>2</sub>:
 
-    `python BalLeRMix.py -i <concatenated input> --getSpect --spect <spectrum file name>`
+    python BalLeRMix.py -i <concatenated input> --getSpect --spect <spectrum file name>
 
 To generate spectrum file for B<sub>2,MAF</sub>:
 
-    `python BalLeRMix.py -i <concatenated input> --getSpect --MAF --spect <spectrum file name>`
+    python BalLeRMix.py -i <concatenated input> --getSpect --MAF --spect <spectrum file name>
 
 To generate spectrum file for B<sub>1</sub>:
 
-    `python BalLeRMix.py -i <concatenated input> --getConfig --spect <config file name>`
+    python BalLeRMix.py -i <concatenated input> --getConfig --spect <config file name>
 
 To generate spectrum file for B<sub>0</sub>:
 
-    `python BalLeRMix.py -i <concatenated input> --getSpect --nosbub --spect <spectrum file name>`
+    python BalLeRMix.py -i <concatenated input> --getSpect --nosbub --spect <spectrum file name>
 
 To generate spectrum file for B<sub>0,MAF</sub>:
 
-    `python BalLeRMix.py -i <concatenated input> --getSpect --nosub --MAF --spect <spectrum file name>`
+    python BalLeRMix.py -i <concatenated input> --getSpect --nosub --MAF --spect <spectrum file name>
 
 #### 4. Customizing the scan
 All arguments besides the aforementioned ones are for customizing the scan.
 
 - `[--physPos] [--rec RRATE] `:
-    Because `BalLeRMix` uses genetic distances (in cM) to compute likelihood, to direct the software to use physical positions instead, you should use `--physPos`, and indicate the uniform recombination rate (cM/nt) in your species of interest with `--rec`. The default value is 10<sup>-6</sup> cM/nt.
+   Because `BalLeRMix` uses genetic distances (in cM) to compute likelihood, to direct the software to use physical positions instead, you should use `--physPos`, and indicate the uniform recombination rate (cM/nt) in your species of interest with `--rec`. The default value is 10<sup>-6</sup> cM/nt.
     This flag will also be automatically incurred if you choose to fix the window size (*e.g.*, 1000bp, 5kb, *etc.* ), in which case yuou want to make sure the software is correctly informed of the recombination rate.
 
 - ` [--fixX X] [--rangeA SEQA] [--listA LISTA]`
-    These areguments allow you to specify the parameter space that the software optimizes over. The presumed equilibrium frequency is *x*, and the rate of decay in linkage disequilibrium is *A*. If you choose to look for multi-allelic balancing selection where more than two alleles are being balanced, *x* should be a vector of descending equilibrium frequencies, and should match the number of balanced alleles you chose (via `-m`) to scan for.
+   These areguments allow you to specify the parameter space that the software optimizes over. The presumed equilibrium frequency is *x*, and the rate of decay in linkage disequilibrium is *A*. If you choose to look for multi-allelic balancing selection where more than two alleles are being balanced, *x* should be a vector of descending equilibrium frequencies, and should match the number of balanced alleles you chose (via `-m`) to scan for.
