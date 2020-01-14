@@ -18,7 +18,7 @@ Complete user manual for BalLeRMix v2 is coming soon...
 
 ------
 
-#### Quick Guide 
+### Quick Guide 
 
 ```
 usage: BalLeRMix.py [-h] -i INFILE --spect SPECTFILE [-o OUTFILE] [-m M]
@@ -29,7 +29,7 @@ usage: BalLeRMix.py [-h] -i INFILE --spect SPECTFILE [-o OUTFILE] [-m M]
 ```
 You can use `python BalLeRMix.py -h` to see the more detailed help page.
 
-##### 1. Input format
+#### 1. Input format
 For B<sub>0</sub> and B<sub>2</sub> statistics, the user should first generate the _tab-delimited_ site frequency spectrum file, *without header*,e.g.:
 > \<k\>|\<sample size n\>|\<proportion in the genome\>    
 > :-----:|:-----:|-----
@@ -53,7 +53,7 @@ The input files should have four columns, presenting physical positions, genetic
 > 101|0.000101|35|50    
 > ...
   
-##### 2. Running the *B* statistics
+#### 2. Running the *B* statistics
 To perform B<sub>2</sub> scans on your input data, use
 
   `python BalLeRMix.py -i <input> --spect <derived allele frequency spectrum> -o <output>`
@@ -74,7 +74,7 @@ To perform B<sub>0,MAF</sub> scans on your input data, use
 
   `python BalLeRMix.py -i <input> --config <minor allele frequency spectrum> -o <output> --nosub --MAF`
 
-##### 3. Generate helper files
+#### 3. Generate helper files
 To generate spectrum file for B<sub>2</sub>:
 
     `python BalLeRMix.py -i <concatenated input> --getSpect --spect <spectrum file name>`
