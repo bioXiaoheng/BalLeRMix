@@ -12,7 +12,7 @@ X Cheng, M DeGiorgio (2019) [Flexible mixture model approaches that accommodate 
 
 ------
 
-In BalLeRMix v2, we introduce the `-m ` argument to customize the presumed number of alleles being balanced at the selected sites. The default value is 2.
+In BalLeRMix v2, we introduce the `-m <m>` argument to customize the presumed number of alleles being balanced at the selected sites, in case you want to look for multi-allelic balancing selection. The default value is 2.
 
 Complete user manual for BalLeRMix v2 is coming soon...
 
