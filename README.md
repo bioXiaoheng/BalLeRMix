@@ -20,15 +20,20 @@ Complete user manual for BalLeRMix v2 is coming soon...
 For B<sub>0</sub> and B<sub>2</sub> statistics, the user should first generate the tab-delimited site frequency spectrum file, without header,e.g.:
 
 > 1 50  0.3572
+>
 > 2 50  0.2024
-> ...<k>  <sample size n>  <proportion in the genome>...
+>
+> ...\<k\>  \<sample size n\>  \<proportion in the genome\>...
+>
 > ...
   
 or the configuration file with polymorphism/substitution ratio, without header:
 
 > 50  0.7346 0.2654
-> ... <sample size n> <\% of substitutions>  <\% of polymorphisms>
-
+>
+> ... \<sample size n\> \<\% of substitutions\>  \<\% of polymorphisms\>
+>
+  
 ##### 2. Running the *B* statistics
 To perform B<sub>2</sub> scans on your input data, use
 
