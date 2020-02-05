@@ -93,7 +93,7 @@ To generate spectrum file for B<sub>0,MAF</sub>:
 
     python BalLeRMix.py -i <concatenated input> --getSpect --nosub --MAF --spect <spectrum file name>
 
-#### 4. Customizing the scan
+### 4. Customizing the scan
 All arguments besides the aforementioned ones are for customizing the scan.
 
 - `[--physPos] [--rec RRATE] `:
