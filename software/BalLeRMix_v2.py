@@ -1,3 +1,4 @@
+#Feb 5, 2020: Bug fix
 #Nov 26, 2019: Modified output format
 #Oct 25, 2019: Fixed a bug in B1
 #Oct 20, 2019: software pass initial debugging & benchmarking
@@ -400,8 +401,9 @@ def initialize(m,spectfile,xGrid,aGrid,MAF,nofreq,nosub):
                     try:
                         Fx[X][a][k] = log(fx)
                     except(ValueError):
-                        print('(k,N): %s,%s, alpha:%g , fx: %g, hx: %g, gx:%g'%(k, N, a, fx, Hx[k], gx))
-                        sys.exit()
+                        print('Skipping (k=%s,N=%s) in full model for X=(%s), alpha:%g , fx: %g, hx: %g, gx:%g'%(k, N, ','.join([str(x) for x in X]),a, fx, Hx[k], gx))
+                        continue
+			#sys.exit()
     return(spec,logSpec,Fx,N)
 
 
