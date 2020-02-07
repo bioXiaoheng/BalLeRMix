@@ -16,6 +16,8 @@ In BalLeRMix v2, we introduce the `-m <m>` argument to customize the presumed nu
 
 Complete user manual for BalLeRMix v2 is coming soon...
 
+**2020.2.5-Update:** Fixed a minor bug in the initialization module.
+
 ------
 
 ## Quick Guide 
