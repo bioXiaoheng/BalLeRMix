@@ -532,7 +532,7 @@ def scan_fixSize_noCenter(xGrid,AGrid,AdGrid,aGrid,outfile,phys_pos,pos_list,Ks,
     #w = float(r) 
     print("writing output to %s" % (outfile))
     with open(outfile,'w') as scores:
-        scores.write('physPos\tgenPos\tLR\txhat\tAhat\n')#\tnumSites
+        scores.write('physPos\tgenPos\tLR\txhat\tAhat\tnumSites\n')#
         start = int( floor(2*float(phys_pos[0])/w)*(w/2) )
         end = start + s ; midpos = start + s/2
         start_i=0; end_i=0; pos_i=0
