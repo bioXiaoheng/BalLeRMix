@@ -464,7 +464,7 @@ def calcBaller(pos_list,Ks,Ns, testSite, testSite_i, logSpect, Fx, xGrid, AGrid,
     #Optimize over xGrid and AGrid
     L = len(AdGrid) ; numSites = len(pos_list)
     #testSite = pos_list[testSite_i]
-    Tmax = [-100,0,0] #LR, x, A
+    nSite = 0; Tmax = [-100,0,0] #LR, x, A
     # Go through all A values
     for A in AGrid:
         # i indexes positions. pos_list ascending
@@ -523,8 +523,8 @@ def calcBaller(pos_list,Ks,Ns, testSite, testSite_i, logSpect, Fx, xGrid, AGrid,
             T = 2*(La - L0)
             if T >=Tmax[0]:
                 Tmax = [T,x,A]
-                winSize = len(i_index)
-    return(Tmax,winSize)
+                nSite = len(i_index)
+    return(Tmax,nSite)
 
 
 '''Perform the scan with fixed window size of w (bp), with step size s (bp).'''
