@@ -8,7 +8,8 @@ This repository hosts the software package for BalLeRMix and scripts used in the
 
 Please cite the following manuscript if using this software:
 
-X Cheng, M DeGiorgio (2019) [Flexible mixture model approaches that accommodate footprint size variability for robust detection of for localizing balancing selection.](https://www.biorxiv.org/content/10.1101/645887v2) *bioRxiv* doi.org/10.1101/645887
+~~Xiaoheng Cheng, Michael DeGiorgio (2019) [Flexible mixture model approaches that accommodate footprint size variability for robust detection of for localizing balancing selection.](https://www.biorxiv.org/content/10.1101/645887v2) *bioRxiv* doi.org/10.1101/645887~~
+Xiaoheng Cheng, Michael DeGiorgio (2020) [Flexible mixture model approaches that accommodate footprint size variability for robust detection of balancing selection.](https://academic.oup.com/mbe/advance-article/doi/10.1093/molbev/msaa134/5848012) *Molecular Biology and Evolution* msaa134, doi.org/10.1093/molbev/msaa134
 
 ------
 
@@ -16,6 +17,7 @@ In BalLeRMix v2, we introduce the `-m <m>` argument to customize the presumed nu
 
 Complete user manual for BalLeRMix v2 is coming soon...
 
+**2020.6.22-Update:** Updated the model for multi-allelic balancing selection in v2.2.
 **2020.2.5-Update:** Fixed a minor bug in the initialization module.
 
 ------
