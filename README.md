@@ -9,6 +9,7 @@ This repository hosts the software package for BalLeRMix and scripts used in the
 Please cite the following manuscript if using this software:
 
 ~~Xiaoheng Cheng, Michael DeGiorgio (2019) [Flexible mixture model approaches that accommodate footprint size variability for robust detection of for localizing balancing selection.](https://www.biorxiv.org/content/10.1101/645887v2) *bioRxiv* doi.org/10.1101/645887~~
+
 Xiaoheng Cheng, Michael DeGiorgio (2020) [Flexible mixture model approaches that accommodate footprint size variability for robust detection of balancing selection.](https://academic.oup.com/mbe/advance-article/doi/10.1093/molbev/msaa134/5848012) *Molecular Biology and Evolution* msaa134, doi.org/10.1093/molbev/msaa134
 
 ------
