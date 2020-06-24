@@ -1,5 +1,9 @@
-#Feb. 17, 2020L re-write the multi-allelic hx model
+#Feb. 17, 2020: re-write the multi-allelic hx model
 #Feb. 14, 2020: revise the weight in multi-allelic model
+#Feb 5, 2020: Bug fix
+#Nov 26, 2019: Modified output format
+#Oct 25, 2019: Fixed a bug in B1
+#Oct 20, 2019: software pass initial debugging & benchmarking
 import numpy as np
 import itertools as itr
 from math import log,exp
