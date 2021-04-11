@@ -1,3 +1,4 @@
+#Apr. 10, 2021: Bug fix (issue#3)
 #Feb. 17, 2020: re-write the multi-allelic hx model
 #Feb. 14, 2020: revise the weight in multi-allelic model
 #Feb 5, 2020: Bug fix
@@ -445,7 +446,7 @@ def calcBaller(pos_list,Ks,Ns, testSite, testSite_i, logSpect, Fx, xGrid, AGrid,
     #Optimize over xGrid and AGrid
     L = len(AdGrid) ; numSites = len(pos_list)
     #testSite = pos_list[testSite_i]
-    Tmax = [-100,0,0] #LR, x, A
+    Tmax = [-100,0,0]; optWinSize=0 #LR, x, A
     # Go through all A values
     for A in AGrid:
         # i indexes positions. pos_list ascending
@@ -493,7 +494,8 @@ def calcBaller(pos_list,Ks,Ns, testSite, testSite_i, logSpect, Fx, xGrid, AGrid,
         for x in xGrid:
             La=0; L0=0
             #go through all the sites
-            for j in range(len(i_index)):
+            winSize = len(i_index)
+            for j in range(winSize):
                 i = i_index[j] #index in the pos_list
                 c = c_index[j]
                 alpha = aGrid[c]
@@ -504,8 +506,8 @@ def calcBaller(pos_list,Ks,Ns, testSite, testSite_i, logSpect, Fx, xGrid, AGrid,
             T = 2*(La - L0)
             if T >=Tmax[0]:
                 Tmax = [T,x,A]
-                winSize = len(i_index)
-    return(Tmax,winSize)
+                optWinSize = winSize
+    return(Tmax, optWinSize)
 
 '''Perform the scan with fixed window size of w (bp), with step size s (bp).'''
 def scan_fixSize_noCenter(xGrid,AGrid,AdGrid,aGrid,outfile,phys_pos,pos_list,Ks,Ns,numSites,Spec, logSpec,Fx,N,Rrate,w,s,MAF=False):
@@ -537,8 +539,8 @@ def scan_fixSize_noCenter(xGrid,AGrid,AdGrid,aGrid,outfile,phys_pos,pos_list,Ks,
                 winPosList = pos_list[start_i:pos_i] + [midpos*Rrate] + pos_list[pos_i:end_i+1]
                 #calcBaller args: pos_list,Ks,Ns, testSite, testSite_i, logSpect, biFx, xGrid, AGrid, AdGrid, aGrid,MAF
                 #pos_list and phys_pos has matching indice
-                Tmax,winSites = calcBaller(winPosList,WinKs, WinNs, midpos*Rrate, pos_i-start_i, logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
-                scores.write('%g\t%s\t%s\t%s\t%g\t%d\n' % (midpos, midpos*Rrate, Tmax[0], ','.join(['%g'%(_) for _ in Tmax[1]]), Tmax[2], winSites))#
+                Tmax, optWinSize = calcBaller(winPosList,WinKs, WinNs, midpos*Rrate, pos_i-start_i, logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
+                scores.write('%g\t%s\t%s\t%s\t%g\t%d\n' % (midpos, midpos*Rrate, Tmax[0], ','.join(['%g'%(_) for _ in Tmax[1]]), Tmax[2], optWinSize))#
                 #read in, take next step
                 start+=s; midpos+=s; end+=s 
     scores.close()
@@ -565,8 +567,8 @@ def scan_fixSize_siteCenter(xGrid,AGrid,AdGrid,aGrid,outfile,phys_pos,pos_list,K
             assert end_i >= start_i
             end_i = min(end_i, numSites-1)
             #Window = Ks[start_i:end_i+1]
-            Tmax,winSites = calcBaller(pos_list[start_i:end_i+1], Ks[start_i:end_i+1], Ns[start_i:end_i+1], pos_list[i], i-start_i , logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
-            scores.write('%s\t%s\t%s\t%s\t%g\t%d\n'% (phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g'%(_) for _ in Tmax[1]]), Tmax[2], winSites))#
+            Tmax, optWinSize = calcBaller(pos_list[start_i:end_i+1], Ks[start_i:end_i+1], Ns[start_i:end_i+1], pos_list[i], i-start_i , logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
+            scores.write('%s\t%s\t%s\t%s\t%g\t%d\n'% (phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g'%(_) for _ in Tmax[1]]), Tmax[2], optWinSize))#
             i+=int(s)
     scores.close()
     return(0)
@@ -580,8 +582,8 @@ def scan_siteBased(xGrid,AGrid,AdGrid,aGrid,outfile,phys_pos,pos_list,Ks,Ns,numS
         while i < numSites:
             testSite = pos_list[i]
             start_i = max(0, i-r) ; end_i = min(numSites,i+r+1)
-            Tmax,winSites = calcBaller(pos_list[start_i:end_i], Ks[start_i:end_i], Ns[start_i:end_i], testSite, i-start_i , logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
-            scores.write('%s\t%s\t%s\t%s\t%g\t%d\n' % (phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g'%(_) for _ in Tmax[1]]), Tmax[2], winSites))
+            Tmax, optWinSize = calcBaller(pos_list[start_i:end_i], Ks[start_i:end_i], Ns[start_i:end_i], testSite, i-start_i , logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
+            scores.write('%s\t%s\t%s\t%s\t%g\t%d\n' % (phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g'%(_) for _ in Tmax[1]]), Tmax[2], optWinSize))
             i+=s
     scores.close()
     return(0)
@@ -593,8 +595,12 @@ def scan_alpha(xGrid,AGrid,AdGrid,aGrid,outfile,phys_pos,pos_list,Ks,Ns,numSites
         i=0
         while i < numSites:
             testSite = pos_list[int(i)]
-            Tmax,winSites = calcBaller(pos_list, Ks, Ns, testSite, int(i), logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
-            scores.write('%s\t%s\t%s\t%s\t%g\t%d\n' % (phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g'%(_) for _ in Tmax[1]]), Tmax[2], winSites))
+            Tmax, optWinSize = calcBaller(pos_list, Ks, Ns, testSite, int(i), logSpec, Fx, xGrid, AGrid, AdGrid, aGrid, MAF)
+            #try:
+            scores.write('%s\t%s\t%s\t%s\t%g\t%d\n' % (phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g' % (_) for _ in Tmax[1]]), Tmax[2], optWinSize))
+            #except:
+            #    print(Tmax)
+            #    sys.exit()
             i+=int(s)
     scores.close()
     return(0)
