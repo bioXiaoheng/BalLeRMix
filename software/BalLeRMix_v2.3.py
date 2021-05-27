@@ -1,3 +1,4 @@
+#May 27, 2021: Bug fix (issue#4)
 #Apr. 10, 2021: Bug fix (issue#3)
 #Feb. 17, 2020: re-write the multi-allelic hx model
 #Feb. 14, 2020: revise the weight in multi-allelic model
@@ -70,7 +71,7 @@ def getLogSpect(spectfile,nosub,MAF):
     #if fold;     
     if MAF and fold:
         fg = {}; fG = {}; checksum=0
-        for i in range(N/2):
+        for i in range(int(N/2)):
             if nosub and i==0:
                 print('Skip substitutions')
                 continue
@@ -78,9 +79,9 @@ def getLogSpect(spectfile,nosub,MAF):
             fG[(i,N)] = log(fg[(i,N)])
             checksum += fg[(i,N)]
         if N%2 == 0:
-            fg[(N/2,N)] = g[(N/2,N)]
-            fG[(N/2,N)] = log(fg[(N/2,N)])
-            checksum += fg[(N/2,N)]
+            fg[(int(N/2),N)] = g[(int(N/2),N)]
+            fG[(int(N/2),N)] = log(fg[(int(N/2),N)])
+            checksum += fg[(int(N/2),N)]
         print('After folding, total probability is %s.'%(checksum))
         return(fg,fG,N)
     #if not folded:
@@ -242,10 +243,10 @@ def normalize(n,fullProbs,MAF=False, nosub=False):
 	if MAF:
 		if not nosub:
 			normProb[0] = fullProbs[n] / base
-		for k in range(1,n/2):
+		for k in range(1,int(n/2)):
 			normProb[k] = ( fullProbs[k] + fullProbs[n-k] ) / base
 		if n % 2 == 0:
-			normProb[n/2] = fullProbs[n/2] / base
+			normProb[int(n/2)] = fullProbs[int(n/2)] / base
 	else:
 		for k in range(1,n):
 			normProb[k] = fullProbs[k] / base
@@ -358,10 +359,10 @@ def initialize(m,spectfile,xGrid,aGrid,MAF,nofreq,nosub):
         #get the range of k
         if MAF:
             print('Using minor allele frequencies...')
-            kpool = list(range(N/2+1))
+            kpool = list(range(int(N/2)+1))
             if nosub:
                 print('...without substitutions')
-                kpool = list(range(1,N/2+1))
+                kpool = list(range(1,int(N/2)+1))
         else:
             print('Using derived allele frequencies...')
             kpool = list(range(1,N+1))
