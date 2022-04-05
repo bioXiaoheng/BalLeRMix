@@ -557,7 +557,7 @@ def scan_fixSize_siteCenter(xGrid,AGrid,AdGrid,aGrid,outfile,phys_pos,pos_list,K
         start_i=0; end_i=0
         while i < numSites:
             testSite=phys_pos[i]
-            start =  max(0, testSite-r/2); end = min(testSite+r/2,phys_pos[-1])
+            start =  max(0, testSite-w/2); end = min(testSite+w/2,phys_pos[-1])
             while phys_pos[start_i] < start:
                 start_i += 1
             while end_i < numSites:
