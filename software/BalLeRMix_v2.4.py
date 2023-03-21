@@ -11,7 +11,7 @@ import numpy as np
 
 
 def getAd(alpha):
-    return -log(alpha)
+    return -np.log(alpha)
 
 
 def getPolyDen(spectfile):
@@ -34,7 +34,7 @@ def getPolyDen(spectfile):
         print('s+p= %s + %s = %s != 1' % (s, p, s + p))
         sys.exit()
     g = {(0, N): s, (1, N): p}
-    G = {(0, N): log(s), (1, N): log(p)}
+    G = {(0, N): np.log(s), (1, N): np.log(p)}
     return g, G, N
 
 
@@ -53,7 +53,7 @@ def getLogSpect(spectfile, nosub, MAF):
             n = int(l[1])
             f = float(l[2])
             g[(x, n)] = f
-            G[(x, n)] = log(f)
+            G[(x, n)] = np.log(f)
             checksum += f
             N.append(n)
     N = list(set(N))
@@ -80,11 +80,11 @@ def getLogSpect(spectfile, nosub, MAF):
                 print('Skip substitutions')
                 continue
             fg[(i, N)] = g[(i, N)] + g[(N - i, N)]
-            fG[(i, N)] = log(fg[(i, N)])
+            fG[(i, N)] = np.log(fg[(i, N)])
             checksum += fg[(i, N)]
         if N % 2 == 0:
             fg[(int(N / 2), N)] = g[(int(N / 2), N)]
-            fG[(int(N / 2), N)] = log(fg[(int(N / 2), N)])
+            fG[(int(N / 2), N)] = np.log(fg[(int(N / 2), N)])
             checksum += fg[(int(N / 2), N)]
         print('After folding, total probability is %s.' % (checksum))
         return fg, fG, N
@@ -155,7 +155,7 @@ def getMNprobs(m, n, X):
     MNcompos = composition(m, n)
     logX = np.log(X)
     logIs = np.array([0] + [np.log(k) for k in range(1, n + 1)])
-    # such that log(k) = logIs[k]
+    # such that np.log(k) = logIs[k]
     Probs = {}
     for K in MNcompos:
         assert len(K) == len(X)
@@ -163,7 +163,7 @@ def getMNprobs(m, n, X):
         K = np.array(K)
         # print len(K),len(logX),len(facKs[:k])
         prob = sum(logIs) + K.dot(logX) - facKs.dot(np.ones(len(K)))
-        Probs[tuple(K)] = exp(prob)
+        Probs[tuple(K)] = np.exp(prob)
     return (Probs)
 
 
@@ -172,7 +172,7 @@ def choose(n, k):
         return 1
     elif n <= 0 or k <= 0:
         return 1
-    logIs = [log(i) for i in range(1, n + 1)]
+    logIs = [np.log(i) for i in range(1, n + 1)]
     logN = sum(logIs) - sum(logIs[:k]) - sum(logIs[:(n - k)])
     return np.exp(logN)
 
@@ -278,52 +278,35 @@ def parseXnM(m, argX):
     Xs = argX.split(',')
     if len(Xs) == 1:
         try:
-            x = float(Xs)
-            assert m == 2
+            x = float(Xs[0])
+            assert m == 2, 'Please make sure vector X (via --fixX) contain the same number of values as m (via -m), the number of balanced alleles..'
             x = max(1 - x, x)
-            X = tuple(1 - x, x)
+            X = tuple([1 - x, x])
             parsedX = [X]
-        except AssertionError:
-            print(
-                'Please make sure vector X (via --fixX) contain the same number of values as m (via -m), the number of balanced alleles..')
-            sys.exit()
-        except:  # X not entirely numerical
-            s = Xs.replace('(', '').replace(')', '')
+        except Exception as e:
+            # X not entirely numerical
+            print(e)
+            s = Xs[0].replace('(', '').replace(')', '')
             s = tuple([float(_) for _ in s.split('|')])
-            try:
-                assert len(s) == m
-            except AssertionError:
-                print(
-                    'Please make sure vector X (via --fixX) contain the same number of values as m (via -m), the number of balanced alleles..')
-                sys.exit()
-            try:
-                assert sum(s) == 1.
-            except:
-                print('Please make sure all values in vector X (via --fixX) sum up to 1.')
-                sys.exit()
+            # sanity checks
+            assert len(s) == m, 'Please make sure vector X (via --fixX) contain the same number of values as m (via -m), the number of balanced alleles..'
+            assert np.isclose(sum(s), 1.), 'Please make sure all values in vector X (via --fixX) sum up to 1.'
             parsedX = [s]
     else:  # more than one value
         parsedX = []
         for X in Xs:
             try:
                 x = float(X)
-                assert m == 2
+                assert m == 2, 'Please make sure vector X (via --fixX) contain the same number of values as m (via -m) for m > 2, the number of balanced alleles.'
                 x = max(1 - x, x)
                 X = tuple([1 - x, x])
                 parsedX.append(X)
-            except AssertionError:
-                print(
-                    'Please make sure vector X (via --fixX) contain the same number of values as m (via -m), the number of balanced alleles.')
-                sys.exit()
-            except:  # X not entirely numerical
-                s = Xs.replace('(', '').replace(')', '')
+            except Exception as e:
+                # X not entirely numerical
+                print(e)
+                s = X.replace('(', '').replace(')', '')
                 s = tuple([float(_) for _ in s.split('|')])
-                try:
-                    assert len(s) == m
-                except AssertionError:
-                    print(
-                        'Please make sure the number of values provided via --fixX matches the presumed number of balanced alleles (-m).')
-                    sys.exit()
+                assert len(s) == m, f'Please make sure the number of values provided via --fixX ({len(s)}, {s}) matches the presumed number of balanced alleles (-m {m}).'
                 parsedX.append(s)
     return parsedX, m
 
@@ -350,7 +333,7 @@ def getGrids(m, X, seqA, listA):
     # define the default list of alpha values:
     aGrid = [0, 1e-8, 1e-7, 1e-6, 1e-5] + [m * 1e-4 for m in range(1, 10001)]
     # generate sorted AdGrid based on the dense grid of alpha:
-    AdGrid = [-log(1e-32)] + [getAd(a) for a in aGrid[1:]]
+    AdGrid = [-np.log(1e-32)] + [getAd(a) for a in aGrid[1:]]
     return Xgrid, AGrid, AdGrid, aGrid
 
 
@@ -377,7 +360,7 @@ objects are logSpec[(k,N)] and Fx[X][a][k] respectively
                 for k in [0, 1]:  # 0 for sub, 1 for poly
                     gx = spec[(k, N)]
                     fx = a * Hx[k] + (1 - a) * gx
-                    Fx[X][a][k] = log(fx)
+                    Fx[X][a][k] = np.log(fx)
     else:
         spec, logSpec, N = getLogSpect(spectfile, nosub, MAF)
         # print(spec)
@@ -409,7 +392,7 @@ objects are logSpec[(k,N)] and Fx[X][a][k] respectively
                     gx = spec[(k, N)]
                     fx = a * Hx[k] + (1 - a) * gx
                     try:
-                        Fx[X][a][k] = log(fx)
+                        Fx[X][a][k] = np.log(fx)
                     except(ValueError):
                         print('Skipping (k=%s,N=%s) in full model for X=(%s), alpha:%g , fx: %g, hx: %g, gx:%g' % (
                             k, N, ','.join([str(x) for x in X]), a, fx, Hx[k], gx))
@@ -419,9 +402,9 @@ objects are logSpec[(k,N)] and Fx[X][a][k] respectively
 
 def readInput(infile, nosub, nofreq, MAF, phys=False, Rrate=1e-6):
     """Return parsed data
-all sitePos are genetic positions (by cM)
-default value of Rrate is 1e-6 cM/site
-Input format: physPos, genPos, x, n
+    all sitePos are genetic positions (by cM)
+    default value of Rrate is 1e-6 cM/site
+    Input format: physPos, genPos, x, n
     """
     phys_pos = []
     Ks = []
