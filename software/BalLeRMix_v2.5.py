@@ -328,8 +328,10 @@ def getGrids(m, X, seqA, listA):
         n = (Amax - Amin) / Astep
         AGrid = [Amin + Atep * i for i in range(n + 1)]
     else:
-        AGrid = [100 * i for i in range(1, 12)] + [200 * i for i in range(6, 13)] + [500 * i for i in range(5, 10)] + [
-            1000 * i for i in range(5, 11)] + [1e6, 1e9]
+        # AGrid = [100 * i for i in range(1, 12)] + [200 * i for i in range(6, 13)] + [500 * i for i in range(5, 10)] + [
+        #     1000 * i for i in range(5, 11)] + [1e6, 1e9]
+        # try out a geometric grid
+        AGrid = np.geomspace(1, 1e16, 33)
     # define the default list of alpha values:
     aGrid = [0, 1e-8, 1e-7, 1e-6, 1e-5] + [m * 1e-4 for m in range(1, 10001)]
     # generate sorted AdGrid based on the dense grid of alpha:
@@ -458,16 +460,17 @@ def readInput(infile, nosub, nofreq, MAF, phys=False, Rrate=1e-6):
     return phys_pos, pos_list, Ks, Ns, numSites
 
 
+# TODO: integrate numpy
 def calcBaller(pos_list, Ks, Ns, testSite, testSite_i, logSpect, Fx, xGrid, AGrid, AdGrid, aGrid, MAF):
     """Return log likelihood for the given window
-testSite is genetic position (in recomb unit)
-logP_neut = logSpect[(k,N)]; logP_alt = Fx[x][a][k]"""
+    testSite is genetic position (in recomb unit)
+    logP_neut = logSpect[(k,N)]; logP_alt = Fx[x][a][k]"""
     # note that the test site is included in Ks
     # Optimize over xGrid and AGrid
     L = len(AdGrid)
     numSites = len(pos_list)
     # testSite = pos_list[testSite_i]
-    Tmax = [-100, 0, 0]
+    Tmax = [-100, (1., 0.), 0]
     optWinSize = 0  # LR, x, A
     # Go through all A values
     for A in AGrid:
@@ -614,7 +617,7 @@ def scan_fixSize_siteCenter(xGrid, AGrid, AdGrid, aGrid, outfile, phys_pos, pos_
                 phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g' % (_) for _ in Tmax[1]]), Tmax[2], optWinSize))  #
             i += int(s)
     scores.close()
-    return (0)
+    return 0
 
 
 def scan_siteBased(xGrid, AGrid, AdGrid, aGrid, outfile, phys_pos, pos_list, Ks, Ns, numSites, Spec, logSpec, Fx, N,
@@ -648,17 +651,14 @@ def scan_alpha(xGrid, AGrid, AdGrid, aGrid, outfile, phys_pos, pos_list, Ks, Ns,
             testSite = pos_list[int(i)]
             Tmax, optWinSize = calcBaller(pos_list, Ks, Ns, testSite, int(i), logSpec, Fx, xGrid, AGrid, AdGrid, aGrid,
                                           MAF)
-            # try:
             scores.write('%s\t%s\t%s\t%s\t%g\t%d\n' % (
                 phys_pos[i], pos_list[i], Tmax[0], ','.join(['%g' % (_) for _ in Tmax[1]]), Tmax[2], optWinSize))
-            # except:
-            #    print(Tmax)
-            #    sys.exit()
             i += int(s)
     scores.close()
     return 0
 
 
+# TODO: re-write it into a class method
 def scan(xGrid, AGrid, AdGrid, aGrid, outfile, phys_pos, pos_list, Ks, Ns, numSites, Spec, logSpec, Fx, N, size=False,
          r=0, s=1, phys=False, nofreq=False, MAF=False, noCenter=False, Rrate=1e-6):
     if size:
@@ -833,6 +833,7 @@ def main():
     xGrid, AGrid, AdGrid, aGrid = getGrids(int(opt.m), opt.x, opt.seqA, opt.listA)
     # print xGrid
     print('\nOptimizing over x= ' + '; '.join(["(" + ','.join(['%g' % (_) for _ in x]) + ")" for x in xGrid]) + '.\n')
+    print(xGrid)
     print('Optimizing over A= ' + ', '.join([str(a) for a in AGrid]) + '.\n')
 
     # initialization for a grid of x
